@@ -4,7 +4,7 @@ import os
 class Earthquicky():
 
     BASE_URL = "https://seismicportal.eu/fdsnws/event/1/"
-    BASE_URL2 = "http://earthquake.usgs.gov/fdsnws/event/1"
+    BASE_URL2 = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=2014-01-02"
 
     
 
@@ -19,7 +19,7 @@ class Earthquicky():
         fullURL = Earthquicky.BASE_URL + tail
         cafile = os.path.join(Earthquicky.getSubPath(), "cacert.pem")
         print(cafile)
-        self.data = requests.get(fullURL, verify=cafile)
+        self.data = requests.get(Earthquicky.BASE_URL2, verify=False)
 
     @classmethod
     def getSubPath(cls):
