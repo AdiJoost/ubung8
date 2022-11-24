@@ -1,1 +1,4 @@
 pandas
+dash
+plotly
+requests
