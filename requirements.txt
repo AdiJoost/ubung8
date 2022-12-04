@@ -2,3 +2,4 @@ pandas
 dash
 plotly
 requests
+dash-bootstrap-components
