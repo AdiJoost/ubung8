@@ -10,4 +10,24 @@
     width: 50%;
     padding: 5px;
     display: block !important;
+    background: #b6e0f8;
+}
+.DateRangePickerInput_arrow_svg {
+    fill: #008fca !important;
+}
+.CalendarDay__selected_span {
+    background: #98defb;
+    border: 1px double #67bcd8;
+    color: #fff;
+}
+
+.CalendarDay__selected_span:hover {
+    background: #0bb1f8;
+    border: 1px double #67bcd8;
+    color: #fff;
+}
+
+b, strong {
+    font-weight: bolder;
+    color: #7cbad5;
 }
