@@ -3,7 +3,6 @@ import os
 
 def main():
     df = getData("earthquakes.csv")
-    print(df.head())
     flags = {
         "fromLongitude": -10,
         "toLongitude": 50,
@@ -43,7 +42,6 @@ def getDataPath(filename):
 def getMe(fromLongitude=0, toLongitude=35, fromLatitude=30, toLatitude=35, gran=1) -> list:
     #returns the filtered List from this exercise
     df = getData("earthquakes.csv")
-    print(df.head())
     flags = {
         "fromLongitude": fromLongitude,
         "toLongitude": toLongitude,
