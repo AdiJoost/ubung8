@@ -2,3 +2,12 @@
     color: rgb(255, 255, 255) !important;
     background-color: #81e0ff;
 }
+
+/* style date-picker */
+#date-picker {
+    position: relative;
+    margin: auto;
+    width: 50%;
+    padding: 5px;
+    display: block !important;
+}

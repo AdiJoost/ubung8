@@ -21,7 +21,13 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 df = pd.read_csv('data\\earthquakes.csv')
 
 #line chart
-fig = px.line(df, x='date', y='mag',color='mag')
+line = px.line(df, x='date', y='mag',color='mag')
+
+#bar chart with date as x-axis
+scatter = px.scatter(df, x='depth', y='mag',color='depth')
+
+#bar chart with date as x-axis with max mag as y-axis 
+bar = px.histogram(df, x='mag', y='depth', hover_name='date', log_x=True, color='mag')
 
 #create slider with mag values, and update line chart
 #create range slider with 0.5 increments
@@ -31,6 +37,15 @@ ramge_slider = dcc.RangeSlider(
     value=[df.mag.min(), df.mag.max()],
 )
 
+#Create a daterange picker
+date_picker = dcc.DatePickerRange(
+    id='date-picker',
+    min_date_allowed=df.date.min(),
+    max_date_allowed=df.date.max(),
+    initial_visible_month=df.date.min(),
+    start_date=df.date.min(),
+    end_date=df.date.max(),
+)
 
 # change fig with slider on mag
 @app.callback(
@@ -42,8 +57,20 @@ def update_figure(selected_mag):
     print(selected_mag[0],selected_mag[1])
     filtered_df = df[ selected_mag[0] <= df.mag]
     filtered_df = filtered_df[filtered_df.mag <= selected_mag[1]]
-    fig = px.line(filtered_df,x='date', y='mag', color = 'mag')
-    return fig
+    line = px.line(filtered_df,x='date', y='mag', color = 'mag')
+    return line
+
+# def update figure with date picker on date
+@app.callback(
+    dash.dependencies.Output('scatter_chart', 'figure'),
+    [dash.dependencies.Input('date-picker', 'start_date'),
+        dash.dependencies.Input('date-picker', 'end_date')])
+
+def update_figure(start_date, end_date):    
+    filtered_df = df[(df.date >= start_date) & (df.date <= end_date)]
+
+    scatter = px.scatter(filtered_df, x='depth', y='mag', color='depth')
+    return scatter
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
@@ -96,11 +123,30 @@ app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
 def render_page_content(pathname):
     if pathname == "/":
         return html.Div(children=[
-            dcc.Graph(
-            id='line_chart',
-            figure=fig
-            ),
-            ramge_slider
+            dbc.Row(
+                [
+                    dbc.Col( dcc.Graph(
+                            id='line_chart',
+                            figure=line),
+                            width = 6),
+                    dbc.Col(dcc.Graph(
+                        id='scatter_chart',
+                        figure=scatter), width=6),
+                ]),
+            dbc.Row(
+                [
+                    dbc.Col(ramge_slider,
+                    width=6),
+                    dbc.Col(date_picker,
+                    width=6),
+                ]),
+            dbc.Row(
+                [
+                    dbc.Col( dcc.Graph(
+                            id='bar_chart',
+                            figure=bar),
+                            width = 12),
+                ]),
     ])
     elif pathname == "/page-1":
         return html.P("This is the content of page 1. Yay!")
