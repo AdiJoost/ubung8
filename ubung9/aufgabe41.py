@@ -40,5 +40,18 @@ def getDataPath(filename):
     my_path = os.getcwd().split("ubung8", 1)[0]
     return os.path.join(my_path, "ubung8", "data", filename)
 
+def getMe(fromLongitude=0, toLongitude=35, fromLatitude=30, toLatitude=35, gran=1) -> list:
+    #returns the filtered List from this exercise
+    df = getData("earthquakes.csv")
+    print(df.head())
+    flags = {
+        "fromLongitude": fromLongitude,
+        "toLongitude": toLongitude,
+        "fromLatitude": fromLatitude,
+        "toLatitude": toLatitude,
+        "gran": gran
+    }
+    return filterList(df, **flags)
+
 if __name__ == "__main__":
     main()
