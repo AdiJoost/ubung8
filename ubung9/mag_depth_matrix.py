@@ -33,7 +33,9 @@ class MagDepthMatrix ():
 
     def getFilter(self):
         magStepSize = (self.magRange[1] - self.magRange[0]) / self.matrixDim
+        self.magStep = magStepSize
         depthStepSize = (self.depthRange[1] - self.depthRange[0]) / self.matrixDim
+        self.depthStep = depthStepSize
         returnValue = []
         for i in range(self.matrixDim):
             magVal = (round((self.magRange[0] + i*magStepSize), 2))
