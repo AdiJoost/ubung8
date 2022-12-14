@@ -9,9 +9,5 @@ def main():
     for row in matrix.matrix:
         print(row)
 
-    
-
-
-
 if __name__ == "__main__":
     main()
