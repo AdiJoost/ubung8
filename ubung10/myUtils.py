@@ -36,6 +36,7 @@ def getData(filename="earthquakes.csv"):
     df['long'] = df['long'].astype(float)
     df['lat'] = df['lat'].astype(float)
     df['depth'] = df['depth'].astype(float)
+    df["date"] = pd.to_datetime(df["date"])
     return df
 
 def getDataPath(filename):

@@ -1,13 +1,14 @@
 from myUtils import getData
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 
 def filterFrame(df, mag=None, depth=None, date=None):
     returnValue = df
+    date = (date, date + timedelta(1))
     if mag:
-        returnValue = returnValue.loc[returnValue["mag"].between(mag[0], mag[1])]
+        returnValue = returnValue.loc[returnValue["mag"] == mag]
     if depth:
-        returnValue = returnValue.loc[returnValue["depth"].between(depth[0], depth[1])]
+        returnValue = returnValue.loc[returnValue["depth"] == depth]
     if date:
         returnValue = returnValue.loc[returnValue["date"].between(date[0], date[1])]
     return returnValue
@@ -16,12 +17,12 @@ def main():
     df = getData()
     df["date"] = pd.to_datetime(df["date"])
     flags = {
-        "mag": (3,4),
-        "depth": (600,1000),
-        "date":(datetime(2016, 1, 1), datetime(2016,12,31))
+        "mag": (5.2),
+        "depth": (628),
+        "date":(datetime(2017, 2, 8))
     }
     df = filterFrame(df, **flags)
-    print(df.describe())
+    print(df.head())
 
 
 if __name__ == "__main__":
