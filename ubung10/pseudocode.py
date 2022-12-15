@@ -43,6 +43,8 @@ def getDataMagic(filename="earthquakes.csv"):
     df['lat'] = df['lat'].astype(float)
     df['depth'] = df['depth'].astype(float)
     df["date"] = pd.to_datetime(df["date"])
+    df.loc[df["latd"] == "S", ["lat"]] = -df["lat"]
+    df.loc[df["longd"] == "E", ["long"]] = -df["long"]
     return df
 
 def getDataPath(filename):
