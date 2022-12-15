@@ -31,7 +31,7 @@ def filterList(df, fromLongitude=0, toLongitude=35, fromLatitude=30, toLatitude=
             })
     return return_value
 
-def getData(filename):
+def getData(filename="earthquakes.csv"):
     df = pd.read_csv(getDataPath(filename), sep=",", on_bad_lines="skip")
     df['long'] = df['long'].astype(float)
     df['lat'] = df['lat'].astype(float)
