@@ -12,7 +12,7 @@ def calcMean(df, dates):
 def slidingTW(df, startTime, endTime, intervall=10, steps=3):
     #intervall in days, steps in days
     returnValue = []
-    #go ask algorithm teacher 
+    
     return returnValue
 
 def main():

@@ -1,21 +1,27 @@
 import pandas as pd
 import os
+from datetime import datetime, timedelta
 """
 Group is still: Sangeeths and Adrian
 """
 
+def getTimeIntervallMagic(startTime, endTime, intervall, steps):
+    returnValue = []
+    timeD = endTime - startTime
+    magicX = timeD.days - intervall
+    dayStep = int(magicX / steps)
+    for i in range(dayStep):
+        returnValue.append(
+            (startTime + timedelta(i*steps),
+            startTime + timedelta((i+1)*steps))
+        )
+    return returnValue
+
+
+
+
 def main():
-    df = getDataMagic("earthquakes.csv")
-    flags = {
-        "fromLongitude": -10,
-        "toLongitude": 50,
-        "fromLatitude": 10,
-        "toLatitude": 35,
-        "gran": 5
-    }
-    endList = filterList(df, **flags)
-    for entrie in endList:
-        print(entrie)
+    print(getTimeIntervallMagic(datetime(2017,1,1), datetime(2017,1,31), 5, 2))
 
 def filterList(df, fromLongitude=0, toLongitude=35, fromLatitude=30, toLatitude=35, gran=1):
     df.loc[df["latd"] == "S", ["lat"]] = -df["lat"]
