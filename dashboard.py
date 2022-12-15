@@ -15,10 +15,10 @@ import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html
 import pandas as pd
 import plotly.express as px
-
+from ubung10.pseudocode import getDataMagic
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-df = pd.read_csv('data\\earthquakes.csv')
+df = getDataMagic()
 
 #line chart
 line = px.line(df, x='date', y='mag',color='mag')
