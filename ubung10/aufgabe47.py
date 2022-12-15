@@ -1,4 +1,4 @@
-from myUtils import getData
+from pseudocode import getDataMagic
 from datetime import datetime
 import pandas as pd
 
@@ -13,7 +13,7 @@ def filterFrame(df, mag=None, depth=None, date=None):
     return returnValue
 
 def main():
-    df = getData()
+    df = getDataMagic()
     flags = {
         "date":(datetime(2016, 1, 1), datetime(2016,12,31))
     }

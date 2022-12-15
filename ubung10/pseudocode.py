@@ -5,7 +5,7 @@ Group is still: Sangeeths and Adrian
 """
 
 def main():
-    df = getData("earthquakes.csv")
+    df = getDataMagic("earthquakes.csv")
     flags = {
         "fromLongitude": -10,
         "toLongitude": 50,
@@ -31,7 +31,7 @@ def filterList(df, fromLongitude=0, toLongitude=35, fromLatitude=30, toLatitude=
             })
     return return_value
 
-def getData(filename="earthquakes.csv"):
+def getDataMagic(filename="earthquakes.csv"):
     df = pd.read_csv(getDataPath(filename), sep=",", on_bad_lines="skip")
     df['long'] = df['long'].astype(float)
     df['lat'] = df['lat'].astype(float)
@@ -45,7 +45,7 @@ def getDataPath(filename):
 
 def getMe(fromLongitude=0, toLongitude=35, fromLatitude=30, toLatitude=35, gran=1) -> list:
     #returns the filtered List from this exercise
-    df = getData("earthquakes.csv")
+    df = getDataMagic("earthquakes.csv")
     flags = {
         "fromLongitude": fromLongitude,
         "toLongitude": toLongitude,

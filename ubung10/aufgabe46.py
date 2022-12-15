@@ -1,4 +1,4 @@
-from myUtils import getData
+from pseudocode import getDataMagic
 from datetime import datetime, timedelta
 import pandas as pd
 
@@ -14,7 +14,7 @@ def filterFrame(df, mag=None, depth=None, date=None):
     return returnValue
 
 def main():
-    df = getData()
+    df = getDataMagic()
     df["date"] = pd.to_datetime(df["date"])
     flags = {
         "mag": (5.2),

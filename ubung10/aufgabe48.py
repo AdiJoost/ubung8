@@ -1,5 +1,5 @@
 from aufgabe47 import filterFrame
-from myUtils import getData
+from pseudocode import getDataMagic
 from datetime import datetime
 import pandas as pd
 
@@ -12,9 +12,11 @@ def calcMean(df, dates):
 def slidingTW(df, startTime, endTime, intervall=10, steps=3):
     #intervall in days, steps in days
     returnValue = []
+    #go ask algorithm teacher 
+    return returnValue
 
 def main():
-    df = getData()
+    df = getDataMagic()
     print(calcMean(df, (datetime(2017,1,1), datetime(2017,12,31))))
 
 
