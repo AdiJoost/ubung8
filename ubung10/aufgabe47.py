@@ -18,7 +18,7 @@ def main():
         "date":(datetime(2016, 1, 1), datetime(2016,12,31))
     }
     df = filterFrame(df, **flags)
-    print(df.describe())
+    print(df.head())
 
 
 if __name__ == "__main__":
