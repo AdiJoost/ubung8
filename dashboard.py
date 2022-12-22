@@ -20,14 +20,14 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 df = getDataMagic()
 
-#line chart
+#chart for analysis
 line = px.line(df, x='date', y='mag',color='mag')
-
-#bar chart with date as x-axis
 scatter = px.scatter(df, x='depth', y='mag',color='depth')
-
-#bar chart with date as x-axis with max mag as y-axis 
 bar = px.histogram(df, x='mag', y='depth', hover_name='date', log_x=True, color='mag')
+
+world_map = px.scatter_mapbox(df, lat="lat", lon="long", zoom=1, height=600, size="mag", size_max=12,color="mag", color_continuous_scale=px.colors.cyclical.IceFire)
+world_map.update_layout(mapbox_style="open-street-map")
+world_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
 #create slider with mag values, and update line chart
 #create range slider with 0.5 increments
@@ -46,6 +46,8 @@ date_picker = dcc.DatePickerRange(
     start_date=df.date.min(),
     end_date=df.date.max(),
 )
+
+
 
 # change fig with slider on mag
 @app.callback(
@@ -103,8 +105,8 @@ sidebar = html.Div(
         ),
         dbc.Nav(
             [
-                dbc.NavLink("Home", href="/", active="exact",style={"color":"#e9e9e9"}),
-                dbc.NavLink("Page 1", href="/page-1", active="exact", style={"color": "#e9e9e9"}),
+                dbc.NavLink("Data Analysis", href="/", active="exact",style={"color":"#e9e9e9"}),
+                dbc.NavLink("Worldcard Plot", href="/page-1", active="exact", style={"color": "#e9e9e9"}),
                 dbc.NavLink("Page 2", href="/page-2", active="exact", style={"color": "#e9e9e9"}),
             ],
             vertical=True,
@@ -125,6 +127,7 @@ def render_page_content(pathname):
         return html.Div(children=[
             dbc.Row(
                 [
+                    dbc.Col(html.H1("Data Analysis"), width=12, style={"color": "#3a7c92"}),
                     dbc.Col( dcc.Graph(
                             id='line_chart',
                             figure=line),
@@ -142,14 +145,21 @@ def render_page_content(pathname):
                 ]),
             dbc.Row(
                 [
-                    dbc.Col( dcc.Graph(
-                            id='bar_chart',
-                            figure=bar),
-                            width = 12),
+                        dbc.Col(dcc.Graph(
+                        id='bar_chart',
+                        figure=bar)),
                 ]),
     ])
     elif pathname == "/page-1":
-        return html.P("This is the content of page 1. Yay!")
+        return html.Div(children=[
+            dbc.Row(
+                [
+                        dbc.Col(html.H1("Worldcard Plot"), width=12, style={"color": "#3a7c92"}),
+                        dbc.Col(dcc.Graph(
+                        id='world_map',
+                        figure=world_map)),
+                ]),
+    ])
     elif pathname == "/page-2":
         return html.P("Oh cool, this is page 2!")
     # If the user tries to reach a different page, return a 404 message
