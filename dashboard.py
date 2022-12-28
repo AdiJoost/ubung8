@@ -16,7 +16,7 @@ from dash import Input, Output, dcc, html
 import pandas as pd
 import plotly.express as px
 from ubung10.pseudocode import getDataMagic
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP,dbc.icons.FONT_AWESOME])
 
 df = getDataMagic()
 
@@ -47,6 +47,17 @@ date_picker = dcc.DatePickerRange(
     end_date=df.date.max(),
 )
 
+@app.callback(
+    dash.dependencies.Output('world_map', 'figure'),
+    [dash.dependencies.Input('country-select', 'value')])
+
+def update_figure(selected_country):
+    print(selected_country)
+    filtered_df = df[df.country.isin(selected_country)]
+    world_map = px.scatter_mapbox(filtered_df, lat="lat", lon="long", zoom=1, height=600, size="mag", size_max=12,color="mag", color_continuous_scale=px.colors.cyclical.IceFire)
+    world_map.update_layout(mapbox_style="open-street-map")
+    world_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    return world_map
 
 
 # change fig with slider on mag
@@ -127,6 +138,7 @@ def render_page_content(pathname):
         return html.Div(children=[
             dbc.Row(
                 [
+                    #add icon on the right side
                     dbc.Col(html.H1("Data Analysis"), width=12, style={"color": "#3a7c92"}),
                     dbc.Col( dcc.Graph(
                             id='line_chart',
@@ -158,6 +170,11 @@ def render_page_content(pathname):
                         dbc.Col(dcc.Graph(
                         id='world_map',
                         figure=world_map)),
+                ]),
+            dbc.Row(
+                [
+                        dbc.Col(country_select,
+                        width=6),
                 ]),
     ])
     elif pathname == "/page-2":
