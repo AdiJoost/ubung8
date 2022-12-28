@@ -15,7 +15,7 @@ import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html
 import pandas as pd
 import plotly.express as px
-from ubung10.pseudocode import getDataMagic
+from pseudocode import getDataMagic
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP,dbc.icons.FONT_AWESOME])
 
 df = getDataMagic()
