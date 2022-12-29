@@ -1,11 +1,11 @@
 import pandas as pd
 import os
 from datetime import datetime, timedelta
+from data.getLive import Earthquicky
 """
 Group is still: Sangeeths and Adrian
 """
-
-def getTimeIntervallMagic(startTime, endTime, intervall, steps):
+"""def getTimeIntervallMagic(startTime, endTime, intervall, steps):
     returnValue = []
     timeD = endTime - startTime
     magicX = timeD.days - intervall
@@ -35,7 +35,8 @@ def filterList(df, fromLongitude=0, toLongitude=35, fromLatitude=30, toLatitude=
                 "minLat":i, "minLong":j,
                 "entries": totF[["date", "depth", "mag"]].values.tolist()
             })
-    return return_value
+    return return_value"""
+
 
 def getDataMagic(filename="earthquakes.csv"):
     df = pd.read_csv(getDataPath(filename), sep=",", on_bad_lines="skip")
@@ -50,7 +51,7 @@ def getDataMagic(filename="earthquakes.csv"):
 def getDataPath(filename):
     my_path = os.getcwd().split("ubung8", 1)[0]
     return os.path.join(my_path, "ubung8", "data", filename)
-
+"""
 def getMe(fromLongitude=0, toLongitude=35, fromLatitude=30, toLatitude=35, gran=1) -> list:
     #returns the filtered List from this exercise
     df = getDataMagic("earthquakes.csv")
@@ -61,7 +62,7 @@ def getMe(fromLongitude=0, toLongitude=35, fromLatitude=30, toLatitude=35, gran=
         "toLatitude": toLatitude,
         "gran": gran
     }
-    return filterList(df, **flags)
+    return filterList(df, **flags)"""
 
 if __name__ == "__main__":
     main()
