@@ -1,7 +1,7 @@
 import requests
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from filelock import FileLock
 import pandas as pd
 
@@ -24,13 +24,26 @@ class Earthquicky():
         self.request = None
         self.__refineData()
 
+    def getLatestDate(self):
+        df = self.getDF()
+        return df.iloc[-1][0]
+
+    def setStartTime(self, date):
+        self.startTime = f"{date.year}-{date.month}-{date.day}"
+
+    def setEndTime(self, date):
+        self.endTime = f"{date.year}-{date.month}-{date.day}"
+
     def GET(self):
         now = datetime.now()
-        tail = f"query?format=csv&starttime=2014-01-01&endtime=2014-01-02"
+        tail = f"query?format=csv&starttime={self.startTime}&endtime={self.endTime}"
         fullURL = Earthquicky.BL + tail
         self.request = requests.get(fullURL, verify=False)
         self.rawData = self.request.text
+        if self.rawData[:9] == "Error 400":
+            return "Error 400"
         self.__refineData()
+        return "200 - ok"
     
     def getDF(self):
         with self.fileLock:
@@ -59,13 +72,19 @@ class Earthquicky():
             
             eqID = args[11]
             date = args[0]
-            lat = abs(float(args[1]))
-            latd = "N" if float(args[1]) >= 0 else "S"
-            long = abs(float(args[2]))
-            longd = "W" if float(args[2]) >= 0 else "E"
+            try:
+                lat = abs(float(args[1]))
+                latd = "N" if float(args[1]) >= 0 else "S"
+                long = abs(float(args[2]))
+                longd = "W" if float(args[2]) >= 0 else "E"
+            except ValueError:
+                continue
             depth = args[3]
             mag = args[4]
-            if (float(mag) < 0 or float(depth) < 0):
+            try:
+                if (float(mag) < 0 or float(depth) < 0):
+                    continue
+            except ValueError:
                 continue
             csvData[eqID] = (
                 date,
@@ -106,10 +125,17 @@ class Earthquicky():
                 del copyData[key]
         self.data = copyData
 
+
+
 def main():
     myDUDE = Earthquicky()
+    startTime = myDUDE.getLatestDate()
+    endTime = startTime + timedelta(days=3)
+    myDUDE.setStartTime(startTime)
+    myDUDE.setEndTime(endTime)
     myDUDE.GET()
     myDUDE.save()
+    print(myDUDE.getLatestDate())
 
 if __name__ == "__main__":
     main()
