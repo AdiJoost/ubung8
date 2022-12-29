@@ -78,6 +78,7 @@ class Earthquicky():
                 eqID
             )
         self.data = csvData
+        self.__removeDoubleID()
     
     def save(self):
         if not self.data:
@@ -97,11 +98,15 @@ class Earthquicky():
         return returnValue
 
     def __removeDoubleID(self):
-        ids = pd.read_csv()
-
+        with self.fileLock:
+            ids = pd.read_csv(self.filePath, usecols=["_id"])
+        copyData = self.data.copy()
+        for key in self.data:
+            if key in ids.values:
+                del copyData[key]
+        self.data = copyData
 
 def main():
-
     myDUDE = Earthquicky()
     myDUDE.GET()
     myDUDE.save()
