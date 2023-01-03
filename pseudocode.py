@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from datetime import datetime, timedelta
-from data.getLive import Earthquicky
+from getLive import Earthquicky
 """
 Group is still: Sangeeths and Adrian
 """
