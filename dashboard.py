@@ -10,9 +10,11 @@ this feature you must install dash-bootstrap-components >= 0.11.0.
 For more details on building multi-page Dash applications, check out the Dash
 documentation: https://dash.plot.ly/urls
 """
+
 import dash
 import dash_bootstrap_components as dbc
-from dash import Input, Output, dcc, html
+import plotly.graph_objects as go
+from dash import Input, Output, dcc, html, State
 import pandas as pd
 import plotly.express as px
 from pseudocode import getDataMagic
@@ -25,7 +27,14 @@ line = px.line(df, x='date', y='mag',color='mag')
 scatter = px.scatter(df, x='depth', y='mag',color='depth')
 bar = px.histogram(df, x='mag', y='depth', hover_name='date', log_x=True, color='mag')
 
-world_map = px.scatter_mapbox(df, lat="lat", lon="long", zoom=1, height=600, size="mag", size_max=12,color="mag", color_continuous_scale=px.colors.cyclical.IceFire)
+world_map2 = go.Figure(go.Scattergeo(lon = df['long'], lat = df['lat'], mode = 'markers', marker = dict(size = 2, color = 'red', line = dict(width = 3, color = 'rgba(68, 68, 68, 0)')), text = df['mag']))
+world_map2.update_geos(
+    projection_type="orthographic"
+)
+world_map2.update_layout(height=600, margin={"r":0,"t":0,"l":0,"b":0})
+
+
+world_map = px.scatter_mapbox(df, lat='lat', lon='long', zoom=1, height=600, size="mag", size_max=12,color="mag", color_continuous_scale=px.colors.cyclical.IceFire)
 world_map.update_layout(mapbox_style="open-street-map")
 world_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
@@ -35,6 +44,78 @@ ramge_slider = dcc.RangeSlider(
     round(df.mag.min()),round(df.mag.max()),0.5,
     id='mag-slider',
     value=[df.mag.min(), df.mag.max()],
+)
+
+# dropdown with number 10,20,30,40,50, until df length
+dropdown = dcc.Dropdown(
+    id='dropdown',
+    options=[{'label': i, 'value': i} for i in range(10,df.shape[0],10)],
+    value=10,
+    style={"padding-bottom": "12px"}
+)
+
+#filter on depth
+
+#submit form on button click
+submit_button = html.Button('Submit', id='submit-button', n_clicks=0,className="btn btn-primary")
+
+#on submit button click, update world map with mag range
+
+@app.callback(
+    dash.dependencies.Output('world_map2', 'figure'),
+    [dash.dependencies.Input('submit-button', 'n_clicks')],
+    [dash.dependencies.State('world-map-slider', 'value')],
+    [dash.dependencies.State('date-pickerworld', 'start_date')],
+    [dash.dependencies.State('date-pickerworld', 'end_date')],
+    [dash.dependencies.State('dropdown', 'value')],
+    [dash.dependencies.State('depth_input', 'value')]
+
+    )
+    
+def update_figure(n_clicks, selected_mag, start_date, end_date, dropdown,input_depth):
+    print(selected_mag)
+    print(input_depth)
+    # update map scatterpoints
+    filtered_df = df[ selected_mag[0] <= df.mag]
+    filtered_df = filtered_df[filtered_df.mag <= selected_mag[1]]
+
+    filtered_df = filtered_df[filtered_df.depth >= input_depth]
+
+    filtered_df = filtered_df[filtered_df.date >= start_date]
+    filtered_df = filtered_df[filtered_df.date <= end_date]
+
+    filtered_df = filtered_df.head(dropdown)
+
+    world_map2 = go.Figure(go.Scattergeo(lon = filtered_df['long'], lat = filtered_df['lat'], mode = 'markers', marker = dict(size = 10, color = '#0b5ed7', line = dict(width = 3, color = 'rgba(68, 68, 68, 0)')), text = filtered_df['mag']))
+    world_map2.update_geos(
+        projection_type="orthographic"
+    )
+    world_map2.update_layout(height=750, margin={"r":0,"t":0,"l":0,"b":0})
+
+    return world_map2
+
+depth_input = dcc.Input(
+    id='depth_input',
+    type='number',
+    placeholder='Enter a value...',
+    value=0,
+    style={"padding-bottom": "12px",},
+    className="form-control"
+)
+
+#range slider for the world map
+world_map_slider = dcc.RangeSlider(
+    round(df.mag.min()),round(df.mag.max()),0.5,
+    id='world-map-slider',
+    value=[df.mag.min(), df.mag.max()],
+)
+dateworld_picker = dcc.DatePickerRange(
+    id='date-pickerworld',
+    min_date_allowed=df.date.min(),
+    max_date_allowed=df.date.max(),
+    initial_visible_month=df.date.min(),
+    start_date=df.date.min(),
+    end_date=df.date.max(),
 )
 
 #Create a daterange picker
@@ -47,26 +128,13 @@ date_picker = dcc.DatePickerRange(
     end_date=df.date.max(),
 )
 
-@app.callback(
-    dash.dependencies.Output('world_map', 'figure'),
-    [dash.dependencies.Input('country-select', 'value')])
-
-def update_figure(selected_country):
-    print(selected_country)
-    filtered_df = df[df.country.isin(selected_country)]
-    world_map = px.scatter_mapbox(filtered_df, lat="lat", lon="long", zoom=1, height=600, size="mag", size_max=12,color="mag", color_continuous_scale=px.colors.cyclical.IceFire)
-    world_map.update_layout(mapbox_style="open-street-map")
-    world_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    return world_map
-
-
 # change fig with slider on mag
 @app.callback(
     dash.dependencies.Output('line_chart', 'figure'),
     [dash.dependencies.Input('mag-slider', 'value')])
 
 def update_figure(selected_mag):
-    print(selected_mag)
+    print("line chart")
     print(selected_mag[0],selected_mag[1])
     filtered_df = df[ selected_mag[0] <= df.mag]
     filtered_df = filtered_df[filtered_df.mag <= selected_mag[1]]
@@ -166,15 +234,30 @@ def render_page_content(pathname):
         return html.Div(children=[
             dbc.Row(
                 [
-                        dbc.Col(html.H1("Worldcard Plot"), width=12, style={"color": "#3a7c92"}),
-                        dbc.Col(dcc.Graph(
-                        id='world_map',
-                        figure=world_map)),
-                ]),
-            dbc.Row(
-                [
-                        dbc.Col(country_select,
-                        width=6),
+                    dbc.Col(html.H1("Worldcard Plot"), width=12, style={"color": "#3a7c92"}),
+                    dbc.Col(dcc.Graph(
+                        id='world_map2',
+                    figure=world_map2),width=9),
+
+                    #create a filter form
+                    dbc.Col(html.Div([
+                        html.H3("Filter", className="display-5"),
+                        html.Div([
+                            html.P("Magnitude"),
+                            world_map_slider,
+                            html.P("Depth"),
+                            depth_input,
+                            html.P("Date", style={"padding-top": "12px"}),
+                            dateworld_picker,
+                            
+                            html.Div([
+                                html.P("Choose data points to display",style={"padding-top": "12px"}),
+                                dropdown,
+                            ]),
+
+                            submit_button
+                        ], style={'columnCount': 1}, className="p-3 bg-light rounded-3"),
+                    ]), width=3),
                 ]),
     ])
     elif pathname == "/page-2":
