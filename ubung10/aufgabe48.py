@@ -39,9 +39,23 @@ def getDates(startDate, endDate, intervall):
         returnValue.append(startDate + timedelta(i))
     return returnValue
 
+def plotMeanMagic(df):
+    plt.subplot(1,2,1)
+    plt.xlabel('Cells')
+    plt.ylabel('Timesteps')
+    plt.title("Left Lane")
+    plt.plot(df["startDate"], df["meanMag"])
+    plt.xticks(rotation=90)
+    plt.subplot(1,2,2)
+    plt.title("Right Lane")
+    plt.xlabel('Cells')
+    plt.plot(df["startDate"], df["meanDepth"])
+    plt.xticks(rotation=90)
+    plt.show()
+
 def main():
     df = getDataMagic()
-    print(getMeanMagic(df, df.iloc[0,0], df.iloc[len(df)-1,0], 3))
+    plotMeanMagic(getMeanMagic(df, df.iloc[0,0], df.iloc[len(df)-1,0], 3))
 
 
 
