@@ -138,6 +138,5 @@ def main():
     print(myDUDE.getLatestDate())
 
 if __name__ == "__main__":
-    for i in range(50):
-        main()
+    main()
 
