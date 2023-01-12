@@ -2,8 +2,10 @@ from aufgabe47 import filterFrame
 from pseudocode import getDataMagic
 from datetime import datetime, timedelta
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def calcMean(df, dates):
+    #gets the mean value from startDate to endDate in dates
     df = filterFrame(df, date=dates)
     depthMean = df["depth"].mean()
     magMean = df["mag"].mean()
@@ -29,6 +31,7 @@ def getMeanMagic(df, startDate, endDate, intervall):
     return getMeanMagicDF
 
 def getDates(startDate, endDate, intervall):
+    #Get a list of all Dates from startDate to endDate with an intervall of "intervall"
     returnValue = []
     totalTime = endDate - startDate
     print(totalTime)
