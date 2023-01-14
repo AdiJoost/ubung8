@@ -12,6 +12,7 @@ documentation: https://dash.plot.ly/urls
 """
 
 import dash
+import flask
 import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from dash import Input, Output, dcc, html, State
@@ -20,7 +21,10 @@ import plotly.express as px
 from pseudocode import getDataMagic
 from aufgabe47 import filterFrame
 from aufgabe48 import getMeanMagic
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP,dbc.icons.FONT_AWESOME])
+
+server = flask.Flask(__name__)
+
+app = dash.Dash(server=server, external_stylesheets=[dbc.themes.BOOTSTRAP,dbc.icons.FONT_AWESOME])
 
 df = getDataMagic()
 data = getMeanMagic(df)
