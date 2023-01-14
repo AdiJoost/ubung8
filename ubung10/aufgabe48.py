@@ -17,7 +17,7 @@ def slidingTW(df, startTime, endTime, intervall=10, steps=3):
     
     return returnValue
 
-def getMeanMagic(df, startDate, endDate, intervall):
+def getMeanMagic(df, startDate= pd.to_datetime('2014-01-01T23:51:36.020Z'), endDate=pd.to_datetime('2015-12-25T00:07:27.740Z'), intervall=10):
     #Input: DF, 
     timeDate = getDates(startDate, endDate, intervall)
     getMeanMagicDF = pd.DataFrame(columns=[

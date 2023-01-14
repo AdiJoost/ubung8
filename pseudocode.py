@@ -10,6 +10,7 @@ def getDataMagic(filename="earthquakes.csv"):
     eq = Earthquicky()
     return eq.getDF()
 
+
 """def getTimeIntervallMagic(startTime, endTime, intervall, steps):
     returnValue = []
     timeD = endTime - startTime

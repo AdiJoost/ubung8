@@ -18,14 +18,40 @@ from dash import Input, Output, dcc, html, State
 import pandas as pd
 import plotly.express as px
 from pseudocode import getDataMagic
+from aufgabe47 import filterFrame
+from aufgabe48 import getMeanMagic
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP,dbc.icons.FONT_AWESOME])
 
 df = getDataMagic()
+data = getMeanMagic(df)
 
 #chart for analysis
 line = px.line(df, x='date', y='mag',color='mag')
 scatter = px.scatter(df, x='depth', y='mag',color='depth')
-bar = px.histogram(df, x='mag', y='depth', hover_name='date', log_x=True, color='mag')
+
+#x-axis is start date bis end date of intervall
+barMagMean =dcc.Graph(
+    id='barMagMean',
+    figure={
+        'data': [
+            {'x': data['startDate'], 'y':  data['meanMag'], 'type': 'bar', 'name': 'Mean of Magnitude'},
+        ],
+        'layout': {
+            'title': 'Mag Data Visualization'
+        }
+    }
+)
+bardepthMean = dcc.Graph(
+    id='bardepthMean',
+    figure={
+        'data': [
+            {'x': data['startDate'], 'y':  data['meanDepth'], 'type': 'bar', 'name': 'Mean of Depth'},
+        ],
+        'layout': {
+            'title': 'Depth Data Visualization'
+        }
+    }
+)
 
 world_map2 = go.Figure(go.Scattergeo(lon = df['long'], lat = df['lat'], mode = 'markers', marker = dict(size = 2, color = 'red', line = dict(width = 3, color = 'rgba(68, 68, 68, 0)')), text = df['mag']))
 world_map2.update_geos(
@@ -225,10 +251,14 @@ def render_page_content(pathname):
                 ]),
             dbc.Row(
                 [
-                        dbc.Col(dcc.Graph(
-                        id='bar_chart',
-                        figure=bar)),
+                    dbc.Col(
+                        barMagMean, 
+                        width=6),
+                    dbc.Col(
+                        bardepthMean, 
+                        width=6),
                 ]),
+           
     ])
     elif pathname == "/page-1":
         return html.Div(children=[
