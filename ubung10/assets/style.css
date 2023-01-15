@@ -1,18 +1,10 @@
 .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
     color: rgb(255, 255, 255) !important;
-    background-color: #81e0ff;
+    background-image: linear-gradient(to right, rgb(0 0 0), rgb(0 211 255));
     font-size: 20px;
 }
 
 /* style date-picker */
-#date-picker {
-    position: relative;
-    margin: auto;
-    width: 50%;
-    padding: 5px;
-    display: block !important;
-    background: #b6e0f8;
-}
 .DateRangePickerInput_arrow_svg {
     fill: #008fca !important;
 }
@@ -31,4 +23,49 @@
 b, strong {
     font-weight: bolder;
     color: #7cbad5;
+}
+
+.designtext {
+    font-weight: 500;
+    color: #005b6d;;
+}
+
+.sidebarStyle {
+    background-image: linear-gradient(181deg, #00d3ff, black);
+}
+
+#submit-buttonFirstPage {
+    background-color: #00404d;
+    border: #00404d;
+    width: 100%;
+    float: left
+}
+#submit-button {
+    background-color: #00404d;
+    border: #00404d;
+    width: 100%;
+    float: left
+}
+#line_chart{
+    height: 345px !important;
+}
+#bar_chart{
+    height: 345px !important;
+}
+#bar_chart2{
+    height: 345px !important;
+}
+#scatter_chart{
+    height: 345px !important;
+}
+.bg-light {
+    --bs-bg-opacity: 1;
+    /* background-color: rgba(var(--bs-light-rgb),var(--bs-bg-opacity))!important; */
+    background-color: #e6fbff !important;
+}
+
+g.layer.land path{
+    
+    fill: #00404d !important;
+
 }
