@@ -15,7 +15,7 @@ def filterFrame(df, mag=None, depth=None, date=None):
 def main():
     df = getDataMagic()
     flags = {
-        "date":(datetime(2016, 1, 1), datetime(2016,12,31))
+        "date":("2014-1-1", "2014-1-2")
     }
     df = filterFrame(df, **flags)
     print(df.head())
